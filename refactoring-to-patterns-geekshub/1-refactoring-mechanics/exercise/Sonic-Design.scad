@@ -2,15 +2,18 @@
 husmum@gatech.edu
 */
 
+BLACK = "Black";
 
-//Lets make Sonic's Head
+module base() {
+    offset = [-6,0,-20];
+    height = 2;
+    radius = 32;
+    
+    color(BLACK)
+        translate(offset)
+            cylinder(h=height,r=radius);
+}
 
-//F6 renders without color
-
-//Cylindrical Base
-color("Black")
-translate([-6,0,-20])
-	cylinder(h=2,r=32);
 
 //Face and space for eyes
 difference(){
@@ -212,3 +215,9 @@ ear();
 translate([5,-10,16])
 rotate([25,0,0])
 ear();
+
+module sonic() {
+    base();
+}
+
+sonic();
