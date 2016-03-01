@@ -3,6 +3,8 @@ husmum@gatech.edu
 */
 
 BLACK = "Black";
+BLUE = [.31, .45, .69];
+ARRAY_BASE_CORRECTION = -1;
 
 module base() {
     offset = [-6,0,-20];
@@ -14,19 +16,30 @@ module base() {
             cylinder(h=height,r=radius);
 }
 
+module eye_orbits() {
+    orbit_deviation = 8;
+    directions = [-1, 1];
+    offset_x = 15;
+    offset_z = 4;
+    radius = 5;
+    
+    hull() {
+        for (i = [0:len(directions) + ARRAY_BASE_CORRECTION]) {
+            translate([offset_x, orbit_deviation * directions[i], offset_z])
+                sphere(r=radius);
+        }
+    }
+}
 
-//Face and space for eyes
-difference(){
-	color([.31, .45, .69])
-		sphere(r=20);
-	
-		sphere(r=18);
-	hull(){
-		translate([15,8,4])
-				sphere(r=5);
-		
-		translate([15,-8,4])
-				sphere(r=5);}}
+module head() {
+    radius = 20;
+    
+    difference(){
+        color(BLUE)
+            sphere(r=20);
+        eye_orbits();
+    }
+}
 
 //Eyes
 
@@ -218,6 +231,7 @@ ear();
 
 module sonic() {
     base();
+    head();
 }
 
 sonic();
