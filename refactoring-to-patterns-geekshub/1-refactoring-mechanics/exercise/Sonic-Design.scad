@@ -4,6 +4,11 @@ husmum@gatech.edu
 
 BLACK = "Black";
 BLUE = [.31, .45, .69];
+WHITE = "White";
+LIME_GREEN = "LimeGreen";
+
+SCALE_1_1 = [1, 1, 1];
+
 ARRAY_BASE_CORRECTION = -1;
 
 module base() {
@@ -16,69 +21,87 @@ module base() {
             cylinder(h=height,r=radius);
 }
 
-module eye_orbits() {
+module eye_orbits(offset_x) {
     orbit_deviation = 8;
     directions = [-1, 1];
-    offset_x = 15;
     offset_z = 4;
     radius = 5;
-    
-    hull() {
-        for (i = [0:len(directions) + ARRAY_BASE_CORRECTION]) {
-            translate([offset_x, orbit_deviation * directions[i], offset_z])
-                sphere(r=radius);
-        }
+   
+    for (i = [0:len(directions) + ARRAY_BASE_CORRECTION]) {
+        translate([offset_x, orbit_deviation * directions[i], offset_z])
+            sphere(r=radius);
     }
 }
 
 module head() {
+    offset_x = 15;
     radius = 20;
     
     difference(){
         color(BLUE)
             sphere(r=20);
-        eye_orbits();
+        hull() {
+            eye_orbits(offset_x);
+        }
     }
 }
 
-//Eyes
+module scleras() {
+    offset_x = 14;
+    
+    color(WHITE){
+        difference(){
+            hull(){
+                eye_orbits(offset_x);
+            }
+        }
+    }
+}
 
-//Base
-color("White"){
-difference(){
-	hull(){
-		translate([14,8,4])
-			sphere(r=5);
-		translate([14,-8,4])
-			sphere(r=5);}}
+module eye_detail(color, offset, radius, scale) {
+    color(color){
+        translate(offset) {
+            scale(scale)
+                sphere(r=radius);
+        }
+    }
+}
 
-	hull(){
-		translate([14,8,4])
-			sphere(r=3);
-		translate([14,-8,4])
-			sphere(r=3);}}
+module iris(offset_y) {
+    offset = [18.3, offset_y, 4];
+    scale = [2, 2, 3];
+    radius = 1;
+    
+    eye_detail(LIME_GREEN, offset, radius, scale);
+}
 
-module eye(y)
-{
-	//Iris
-	color("LimeGreen"){
-		translate([18.3,y,4]) {
-			scale([2.0,2.0,3.0]) 
-				sphere(r=1.0); }}
-	
-	//Pupil
-	color("Black"){
-		translate([19.6,y,3]){
-			scale([1,1,2])
-				sphere(r=1);}}
+module pupil(offset_y) {
+    offset = [19.6, offset_y, 3];
+    scale = [1, 1, 2];
+    radius= 1;
+    
+    eye_detail(BLACK, offset, radius, scale);
+}
 
-	//Light
-	color("White"){
-		translate([20.1,y-.2,2]){
-				sphere(r=.4);}}}
+module brightness(offset_y) {
+    center_deviation = .2;
+    offset = [20.1, offset_y - center_deviation, 2];
+    radius = .4;
+    
+    eye_detail(WHITE, offset, radius, SCALE_1_1);
+}
 
-eye(7);
-eye(-7);
+module eyes() {
+    y_offsets = [-7, 7];
+
+    scleras();
+
+    for (i = [0:len(y_offsets) + ARRAY_BASE_CORRECTION]) {
+        iris(y_offsets[i]);
+        pupil(y_offsets[i]);
+        brightness(y_offsets[i]);
+    }
+}
 
 //Sonic's spiky hair
 module hair(d,x,y,z,r){ 
@@ -232,6 +255,7 @@ ear();
 module sonic() {
     base();
     head();
+    eyes();
 }
 
 sonic();
