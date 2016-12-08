@@ -1,0 +1,31 @@
+{
+  "name": "mostly-adequate-guide-to-fp-course",
+  "version": "0.0.1",
+  "description": "Exercises done during the lecture of Mostly Adequate Guide to Functional Programming",
+  "dependencies": {
+    "accounting": "^0.4.1",
+    "chai": "^1.9.1",
+    "ramda": "^0.13.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  },
+  "scripts": {
+    "test:curry": "mocha curry/spec.js -w",
+    "test:compose": "mocha compose/spec.js -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guerrero/courses"
+  },
+  "author": {
+    "name": "Alex Guerrero",
+    "email": "hello@alexguerrero.es"
+  },
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/guerrero/courses"
+  },
+  "homepage": "https://github.com/guerrero/courses",
+  "private": true
+}
