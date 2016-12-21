@@ -6,6 +6,7 @@ BLACK = "Black";
 BLUE = [.31, .45, .69];
 WHITE = "White";
 LIME_GREEN = "LimeGreen";
+SKIN = [.90,.596,.41];
 
 SCALE_1_1 = [1, 1, 1];
 
@@ -39,7 +40,7 @@ module head() {
 
     difference(){
         color(BLUE)
-            sphere(r=20);
+            sphere(r=radius);
         hull() {
             eye_orbits(offset_x);
         }
@@ -135,87 +136,102 @@ module hair() {
     }
 }
 
-//Nose
+module nose_block() {
+    offset = [2,0,0];
+    
+    color(BLACK)
+        hull(){
+            sphere(r=2);
 
-translate([20,0,0])
-difference(){
-	color("Black")
-	hull(){
-		sphere(r=2);
+            translate(offset)
+                sphere(r=2.4);
+        }
+}
 
-	translate([2,0,0])
-		sphere(r=2.4);}
+module nose_notch() {
+    offset = [1,0,3];
+    
+    translate(offset)
+        sphere(r=2);
+}
 
-	translate([1,0,3])
-		sphere(r=2);
+module nose() {
+    offset = [20,0,0];
+    
+    translate(offset)
+        difference() {
+            nose_block();
+            nose_notch();
+        }
+}
 
-	translate([1,0,-3])
-		sphere(r=2);}
+module snout() {
+    offset = [7, 0, 0];
+    color(SKIN)
+        translate(offset)
+            difference(){
+                sphere(r=15);
 
-//Mouth Area
+                rotate([0,90,0])
+                    translate([-15,-15,-15])
+                        cube([15,30,30]);
 
-color([.90,.596,.41])
-translate([7,0,0])
-	difference(){
-		sphere(r=15);
+                sphere(r=13.5);
 
-		translate([-15,-15,-15])
-			cube([15,30,30]);
+                translate([8,-7.5,6])
+                    sphere(r=9);
 
-		rotate([0,90,0])
-		translate([-15,-15,-15])
-			cube([15,30,30]);
+                translate([8,7.5,6])
+                    sphere(r=9);
 
-		sphere(r=13.5);
-
-		translate([8,-7.5,6])
-			sphere(r=9);
-
-		translate([8,7.5,6])
-			sphere(r=9);
-
-		translate([15,0,2])
-			sphere(r=4);}
+                translate([15,0,2])
+                    sphere(r=4);
+            }
+}
 
 //Smirk
 
-color("Black")
-translate([-10,3,-7]){
-difference(){
-rotate([15,0,0])
-translate([30,0,0])
-scale([1,4,1])
-	sphere(r=1);
+module smirk() {
+    radius = 1;
+    color(BLACK)
+        translate([-10,3,-7]) {
+            difference(){
+                rotate([15,0,0])
+                    translate([30,0,0])
+                        scale([1,4,1])
+                            sphere(r = radius);
 
-rotate([15,0,0])
-translate([30,0,1])
-scale([1,4,1])
-	sphere(r=1);
+                rotate([15,0,0])
+                    translate([30,0,1])
+                        scale([1,4,1])
+                            sphere(r = radius);
+            }
+
+            difference() {
+                rotate([-15,0,0])
+                    translate([30,3,2])
+                        scale([1,1,4])
+                            sphere(r = radius);
+
+                rotate([-15,0,0])
+                    translate([30,3,0])
+                        scale([1,1,4])
+                            sphere(r = radius);
+            }
+
+            difference(){
+                rotate([15,0,0])
+                    translate([30,3.5,0])
+                        scale([1,1,4])
+                            sphere(r = radius);
+
+                rotate([15,0,0])
+                    translate([30,3.5,2])
+                        scale([1,1,4])
+                            sphere(r = radius);
+            }
+        }
 }
-
-difference(){
-rotate([-15,0,0])
-translate([30,3,2])
-scale([1,1,4])
-	sphere(r=1);
-
-rotate([-15,0,0])
-translate([30,3,0])
-scale([1,1,4])
-	sphere(r=1);
-}
-
-difference(){
-rotate([15,0,0])
-translate([30,3.5,0])
-scale([1,1,4])
-	sphere(r=1);
-
-rotate([15,0,0])
-translate([30,3.5,2])
-scale([1,1,4])
-	sphere(r=1);
-}}
 
 //Ears
 
@@ -248,11 +264,14 @@ translate([5,-10,16])
 rotate([25,0,0])
 ear();
 
-module sonic() {
+module main() {
     base();
     head();
     eyes();
     hair();
+    nose();
+    snout();
+    smirk();
 }
 
-sonic();
+main();
