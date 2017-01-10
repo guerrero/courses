@@ -5,11 +5,14 @@ husmum@gatech.edu
 BLACK = "Black";
 BLUE = [.31, .45, .69];
 WHITE = "White";
+SKIN = [.90,.596,.41];
 LIME_GREEN = "LimeGreen";
 TOP = "Top";
 BOTTOM = "Bottom";
 
-SCALE_1_1 = [1, 1, 1];
+Y_90_DEGREES = [0,90,0];
+RIGHT_15_DEGREES = [15, 0, 0];
+LEFT_15_DEGREES = [-15, 0, 0];
 
 ARRAY_BASE_CORRECTION = -1; 
 
@@ -60,7 +63,7 @@ module scleras() {
     }
 }
 
-module eye_detail(color, offset, radius, scale) {
+module eye_detail(color, offset, radius, scale=[1, 1, 1]) {
     color(color){
         translate(offset) {
             scale(scale)
@@ -90,7 +93,7 @@ module brightness(offset_y) {
     offset = [20.1, offset_y - center_deviation, 2];
     radius = .4;
 
-    eye_detail(WHITE, offset, radius, SCALE_1_1);
+    eye_detail(WHITE, offset, radius);
 }
 
 module eyes() {
@@ -171,70 +174,99 @@ module nose() {
         }
 }
 
-//Mouth Area
+module smirk_stroke(rotation, ratio, offsets) {
+    radius = 1;
+    
+    rotate(rotation)
+        difference() {
+            translate(offsets[0])
+                scale(ratio)
+                    sphere(r = radius);
 
-color([.90,.596,.41])
-translate([7,0,0])
-	difference(){
-		sphere(r=15);
-
-		translate([-15,-15,-15])
-			cube([15,30,30]);
-
-		rotate([0,90,0])
-		translate([-15,-15,-15])
-			cube([15,30,30]);
-
-		sphere(r=13.5);
-
-		translate([8,-7.5,6])
-			sphere(r=9);
-
-		translate([8,7.5,6])
-			sphere(r=9);
-
-		translate([15,0,2])
-			sphere(r=4);}
-
-//Smirk
-
-color("Black")
-translate([-10,3,-7]){
-difference(){
-rotate([15,0,0])
-translate([30,0,0])
-scale([1,4,1])
-	sphere(r=1);
-
-rotate([15,0,0])
-translate([30,0,1])
-scale([1,4,1])
-	sphere(r=1);
+            translate(offsets[1])
+                scale(ratio)
+                    sphere(r = radius);
+        }
 }
 
-difference(){
-rotate([-15,0,0])
-translate([30,3,2])
-scale([1,1,4])
-	sphere(r=1);
+function stroke(rotation, scale, offsets) = [rotation, ratio, offsets];
 
-rotate([-15,0,0])
-translate([30,3,0])
-scale([1,1,4])
-	sphere(r=1);
+module smirk() {
+    offset = [20, 3, -7];
+    
+    strokes = [
+        stroke(
+            rotation = RIGHT_15_DEGREES,
+            ratio = [1, 4, 1],
+            offsets = [
+                [ 0, 0, 0],
+                [ 0, 0, 1]
+            ]
+        ),
+        stroke(
+            rotation = LEFT_15_DEGREES,
+            ratio = [1, 1, 4],
+            offsets = [
+                [0, 3, 2],
+                [ 0, 3, 0]
+            ]
+        ),
+        stroke(
+            rotation = RIGHT_15_DEGREES,
+            ratio = [1, 1, 4],
+            offsets = [
+                [0, 3.5, 0],
+                [0, 3.5, 2]
+            ]
+        )
+    ]; 
+    
+    color(BLACK)
+        translate(offset) {
+            for (i = [0:len(strokes) + ARRAY_BASE_CORRECTION]) {
+                smirk_stroke(
+                    rotation = strokes[i][0],
+                    ratio = strokes[i][1],
+                    offsets = strokes[i][2]
+                );
+            }
+        }
 }
 
-difference(){
-rotate([15,0,0])
-translate([30,3.5,0])
-scale([1,1,4])
-	sphere(r=1);
+function invert_y(xyz) = [xyz[0], xyz[1] * -1, xyz[2]];
 
-rotate([15,0,0])
-translate([30,3.5,2])
-scale([1,1,4])
-	sphere(r=1);
-}}
+module snout() {
+    offset = [7, 0, 0];
+    base_radius = 15;
+    base_substraction_radius = 13.5;
+    front_substraction_offset = [-15,-15,-15];
+    front_substraction_dimensions = [15,30,30];
+    side_substraction_offset = [8, -7.5, 6];
+    side_substraction_radius = 9;
+    nose_contour_offset = [15, 0, 2];
+    nose_contour_radius = 4;
+    
+    color(SKIN)
+        translate(offset)
+            difference() {
+                
+                sphere(base_radius);
+                sphere(base_substraction_radius);
+                
+                rotate(Y_90_DEGREES)
+                    translate(front_substraction_offset)
+                        cube(front_substraction_dimensions);
+
+                translate(side_substraction_offset)
+                    sphere(side_substraction_radius);
+
+                translate(invert_y(side_substraction_offset))
+                    sphere(side_substraction_radius);
+        
+               translate(nose_contour_offset)
+                    sphere(nose_contour_radius);
+            }
+}
 
 //Ears
 
@@ -273,6 +305,8 @@ module sonic() {
     eyes();
     hair();
     nose();
+    smirk();
+    snout();
 }
 
 sonic();
