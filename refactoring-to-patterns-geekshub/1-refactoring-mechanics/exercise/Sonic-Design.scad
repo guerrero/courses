@@ -6,10 +6,12 @@ BLACK = "Black";
 BLUE = [.31, .45, .69];
 WHITE = "White";
 LIME_GREEN = "LimeGreen";
+TOP = "Top";
+BOTTOM = "Bottom";
 
 SCALE_1_1 = [1, 1, 1];
 
-ARRAY_BASE_CORRECTION = -1;
+ARRAY_BASE_CORRECTION = -1; 
 
 module base() {
     offset = [-6,0,-20];
@@ -135,22 +137,39 @@ module hair() {
     }
 }
 
-//Nose
+module nose_base() {
+    internal_part_radius = 2;
+    external_part_radius = 2.4;
+    external_part_offset = [2,0,0];
+    
+    color(BLACK)
+        hull(){
+            sphere(r= internal_part_radius);
+            
+            translate(external_part_offset)
+                sphere(r = external_part_radius);
+        }
+}
 
-translate([20,0,0])
-difference(){
-	color("Black")
-	hull(){
-		sphere(r=2);
+module nose_substraction(position) {
+    z_offset = position == TOP ? 3 : -3;
+    offset = [1, 0, z_offset];
+    radius = 2;
+    
+    translate(offset)
+        sphere(r = radius);
+}
 
-	translate([2,0,0])
-		sphere(r=2.4);}
-
-	translate([1,0,3])
-		sphere(r=2);
-
-	translate([1,0,-3])
-		sphere(r=2);}
+module nose() {
+    offset = [20, 0, 0];
+    
+    translate(offset)
+        difference() {
+            nose_base();
+            nose_substraction(TOP);
+            nose_substraction(BOTTOM);
+        }
+}
 
 //Mouth Area
 
@@ -253,6 +272,7 @@ module sonic() {
     head();
     eyes();
     hair();
+    nose();
 }
 
 sonic();
