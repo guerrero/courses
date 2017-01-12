@@ -107,7 +107,7 @@ module eyes() {
 module lock_of_hair(lock){
     iterations = 25;
     segment_height = 5;
-    
+
     for (i = [0:iterations]) {
         rotation = [0, 90 - i, 0];
         offset_x = lock[0] - i / iterations;
@@ -142,11 +142,11 @@ module nose_base() {
     internal_part_radius = 2;
     external_part_radius = 2.4;
     external_part_offset = [2, 0, 0];
-    
+
     color(BLACK)
         hull(){
             sphere(r = internal_part_radius);
-            
+
             translate(external_part_offset)
                 sphere(r = external_part_radius);
         }
@@ -157,7 +157,7 @@ module nose_substractions(position) {
     offset_y = 0;
     offset_z = 3;
     radius = 2;
-    
+
     for (i = array_range(DIRECTIONS)) {
         color(BLACK)
             translate([offset_x, offset_y, offset_z * DIRECTIONS[i]])
@@ -167,7 +167,7 @@ module nose_substractions(position) {
 
 module nose() {
     offset = [20, 0, 0];
-    
+
     translate(offset)
         difference() {
             nose_base();
@@ -177,7 +177,7 @@ module nose() {
 
 module smirk_stroke(rotation, ratio, offsets) {
     radius = 1;
-    
+
     rotate(rotation)
         difference() {
             translate(offsets[0])
@@ -194,7 +194,7 @@ function stroke(rotation, scale, offsets) = [rotation, ratio, offsets];
 
 module smirk() {
     offset = [20, 3, -7];
-    
+
     strokes = [
         stroke(
             rotation = RIGHT_15_DEGREES,
@@ -220,8 +220,8 @@ module smirk() {
                 [0, 3.5, 2]
             ]
         )
-    ]; 
-    
+    ];
+
     color(BLACK)
         translate(offset) {
             for (i = array_range(strokes)) {
@@ -246,14 +246,14 @@ module snout() {
     side_substraction_radius = 9;
     nose_contour_offset = [15, 0, 2];
     nose_contour_radius = 4;
-    
+
     color(SKIN)
         translate(offset)
             difference() {
-                
+
                 sphere(base_radius);
                 sphere(base_substraction_radius);
-                
+
                 rotate(Y_90_DEGREES)
                     translate(front_substraction_offset)
                         cube(front_substraction_dimensions);
@@ -263,7 +263,7 @@ module snout() {
 
                 translate(invert_y(side_substraction_offset))
                     sphere(side_substraction_radius);
-        
+
                translate(nose_contour_offset)
                     sphere(nose_contour_radius);
             }
@@ -273,10 +273,10 @@ module outer_ear(pavilion) {
     base_height = 10;
     base_bottom_radius = 5;
     base_top_radius = 0;
-    
+
     substraction_offset = [0, -5, 0];
     substraction_size = 10;
-    
+
     color(BLUE)
         difference() {
             cylinder(base_height, base_bottom_radius, base_top_radius);
@@ -290,7 +290,7 @@ module outer_ear(pavilion) {
 module inner_ear(pavilion) {
     substraction_size = 8;
     substraction_offset = [0, -4, 0];
-    
+
     color(SKIN)
         difference() {
             cylinder(pavilion[0], pavilion[1], pavilion[2]);
@@ -311,7 +311,7 @@ module ear(offset_y, rotation_x) {
         pavilion_bottom_radius,
         pavilion_top_radius
     ];
-    
+
     translate(offset)
         rotate(rotation) {
             outer_ear(pavilion);
