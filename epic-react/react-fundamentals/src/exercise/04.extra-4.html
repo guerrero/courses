@@ -1,0 +1,33 @@
+<!-- Creating custom components -->
+<!-- Use the prop-types package -->
+<!-- http://localhost:3000/isolated/exercise/04.html -->
+
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@16.13.1/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16.13.1/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.9.3/babel.js"></script>
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+
+  <script type="text/babel">
+    const Message = ({greeting, subject}) => (
+      <div className="message">
+        {greeting}, {subject}
+      </div>
+    )
+
+    Message.propTypes = {
+      greeting: PropTypes.string.isRequired,
+      subject: PropTypes.string.isRequired,
+    }
+
+    const element = (
+      <div className="container">
+        <Message greeting={'Hello'} subject={1} />
+        <Message greeting={'Goodbye'} subject={'World'} />
+      </div>
+    )
+
+    ReactDOM.render(element, document.getElementById('root'))
+  </script>
+</body>

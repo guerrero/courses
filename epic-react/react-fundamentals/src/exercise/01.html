@@ -1,0 +1,15 @@
+<!-- Basic JavaScript-rendered Hello World -->
+<!-- http://localhost:3000/isolated/final/01.html -->
+
+<body>
+  <div id="root"></div>
+  <script type="module">
+    const root = document.getElementById('root')
+
+    const container = document.createElement('div')
+    container.textContent = 'Hello World'
+    container.className = 'container'
+
+    root.append(container)
+  </script>
+</body>
