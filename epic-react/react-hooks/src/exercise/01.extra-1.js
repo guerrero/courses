@@ -1,10 +1,11 @@
 // useState: greeting
+// Accept an initialName
 // http://localhost:3000/isolated/exercise/01.js
 
 import React, {useState} from 'react'
 
-function Greeting() {
-  const [name, setName] = useState('')
+function Greeting({initialName = ''}) {
+  const [name, setName] = useState(initialName)
 
   function handleChange(event) {
     const value = event.target.value
@@ -15,7 +16,7 @@ function Greeting() {
     <div>
       <form>
         <label htmlFor="name">Name: </label>
-        <input onChange={handleChange} id="name" />
+        <input onChange={handleChange} defaultValue={name} id="name" />
       </form>
       {name ? <strong>Hello {name}</strong> : 'Please type your name'}
     </div>
@@ -23,7 +24,7 @@ function Greeting() {
 }
 
 function App() {
-  return <Greeting />
+  return <Greeting initialName="Alex" />
 }
 
 export default App
