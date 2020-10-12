@@ -1,11 +1,12 @@
 // useEffect: persistent state
+// Lazy state initialization
 // http://localhost:3000/isolated/exercise/02.js
 
 import React, {useState, useEffect} from 'react'
 
 function Greeting({initialName = ''}) {
   const [name, setName] = useState(
-    window.localStorage.getItem('name') || initialName,
+    () => window.localStorage.getItem('name') || initialName,
   )
 
   useEffect(() => {
